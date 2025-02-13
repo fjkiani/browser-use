@@ -10,6 +10,10 @@ class RegisteredAction(BaseModel):
 	description: str
 	function: Callable
 	param_model: Type[BaseModel]
+<<<<<<< HEAD
+=======
+	requires_browser: bool = False
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	model_config = ConfigDict(arbitrary_types_allowed=True)
 
@@ -44,7 +48,11 @@ class ActionModel(BaseModel):
 		if not params:
 			return None
 		for param in params:
+<<<<<<< HEAD
 			if param is not None and 'index' in param:
+=======
+			if 'index' in param:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				return param['index']
 		return None
 

@@ -16,7 +16,10 @@ class HistoryTreeProcessor:
 	@staticmethod
 	def convert_dom_element_to_history_element(dom_element: DOMElementNode) -> DOMHistoryElement:
 		parent_branch_path = HistoryTreeProcessor._get_parent_branch_path(dom_element)
+<<<<<<< HEAD
 		css_selector = dom_element.get_advanced_css_selector()
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		return DOMHistoryElement(
 			dom_element.tag_name,
 			dom_element.xpath,
@@ -24,6 +27,7 @@ class HistoryTreeProcessor:
 			parent_branch_path,
 			dom_element.attributes,
 			dom_element.shadow_root,
+<<<<<<< HEAD
 			css_selector=css_selector,
 			page_coordinates=dom_element.page_coordinates,
 			viewport_coordinates=dom_element.viewport_coordinates,
@@ -33,6 +37,17 @@ class HistoryTreeProcessor:
 	@staticmethod
 	def find_history_element_in_tree(dom_history_element: DOMHistoryElement, tree: DOMElementNode) -> Optional[DOMElementNode]:
 		hashed_dom_history_element = HistoryTreeProcessor._hash_dom_history_element(dom_history_element)
+=======
+		)
+
+	@staticmethod
+	def find_history_element_in_tree(
+		dom_history_element: DOMHistoryElement, tree: DOMElementNode
+	) -> Optional[DOMElementNode]:
+		hashed_dom_history_element = HistoryTreeProcessor._hash_dom_history_element(
+			dom_history_element
+		)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		def process_node(node: DOMElementNode):
 			if node.highlight_index is not None:
@@ -49,29 +64,53 @@ class HistoryTreeProcessor:
 		return process_node(tree)
 
 	@staticmethod
+<<<<<<< HEAD
 	def compare_history_element_and_dom_element(dom_history_element: DOMHistoryElement, dom_element: DOMElementNode) -> bool:
 		hashed_dom_history_element = HistoryTreeProcessor._hash_dom_history_element(dom_history_element)
+=======
+	def compare_history_element_and_dom_element(
+		dom_history_element: DOMHistoryElement, dom_element: DOMElementNode
+	) -> bool:
+		hashed_dom_history_element = HistoryTreeProcessor._hash_dom_history_element(
+			dom_history_element
+		)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		hashed_dom_element = HistoryTreeProcessor._hash_dom_element(dom_element)
 
 		return hashed_dom_history_element == hashed_dom_element
 
 	@staticmethod
 	def _hash_dom_history_element(dom_history_element: DOMHistoryElement) -> HashedDomElement:
+<<<<<<< HEAD
 		branch_path_hash = HistoryTreeProcessor._parent_branch_path_hash(dom_history_element.entire_parent_branch_path)
 		attributes_hash = HistoryTreeProcessor._attributes_hash(dom_history_element.attributes)
 		xpath_hash = HistoryTreeProcessor._xpath_hash(dom_history_element.xpath)
 
 		return HashedDomElement(branch_path_hash, attributes_hash, xpath_hash)
+=======
+		branch_path_hash = HistoryTreeProcessor._parent_branch_path_hash(
+			dom_history_element.entire_parent_branch_path
+		)
+		attributes_hash = HistoryTreeProcessor._attributes_hash(dom_history_element.attributes)
+
+		return HashedDomElement(branch_path_hash, attributes_hash)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	@staticmethod
 	def _hash_dom_element(dom_element: DOMElementNode) -> HashedDomElement:
 		parent_branch_path = HistoryTreeProcessor._get_parent_branch_path(dom_element)
 		branch_path_hash = HistoryTreeProcessor._parent_branch_path_hash(parent_branch_path)
 		attributes_hash = HistoryTreeProcessor._attributes_hash(dom_element.attributes)
+<<<<<<< HEAD
 		xpath_hash = HistoryTreeProcessor._xpath_hash(dom_element.xpath)
 		# text_hash = DomTreeProcessor._text_hash(dom_element)
 
 		return HashedDomElement(branch_path_hash, attributes_hash, xpath_hash)
+=======
+		# text_hash = DomTreeProcessor._text_hash(dom_element)
+
+		return HashedDomElement(branch_path_hash, attributes_hash)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	@staticmethod
 	def _get_parent_branch_path(dom_element: DOMElementNode) -> list[str]:
@@ -96,10 +135,13 @@ class HistoryTreeProcessor:
 		return hashlib.sha256(attributes_string.encode()).hexdigest()
 
 	@staticmethod
+<<<<<<< HEAD
 	def _xpath_hash(xpath: str) -> str:
 		return hashlib.sha256(xpath.encode()).hexdigest()
 
 	@staticmethod
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	def _text_hash(dom_element: DOMElementNode) -> str:
 		""" """
 		text_string = dom_element.get_all_text_till_next_clickable_element()

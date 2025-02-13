@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import datetime
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 from datetime import datetime
 from typing import List, Optional
 
@@ -9,8 +12,16 @@ from browser_use.browser.views import BrowserState
 
 
 class SystemPrompt:
+<<<<<<< HEAD
 	def __init__(self, action_description: str, max_actions_per_step: int = 10):
 		self.default_action_description = action_description
+=======
+	def __init__(
+		self, action_description: str, current_date: datetime, max_actions_per_step: int = 10
+	):
+		self.default_action_description = action_description
+		self.current_date = current_date
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		self.max_actions_per_step = max_actions_per_step
 
 	def important_rules(self) -> str:
@@ -21,22 +32,36 @@ class SystemPrompt:
 1. RESPONSE FORMAT: You must ALWAYS respond with valid JSON in this exact format:
    {
      "current_state": {
+<<<<<<< HEAD
 		"page_summary": "Quick detailed summary of new information from the current page which is not yet in the task history memory. Be specific with details which are important for the task. This is not on the meta level, but should be facts. If all the information is already in the task history memory, leave this empty.",
 		"evaluation_previous_goal": "Success|Failed|Unknown - Analyze the current elements and the image to check if the previous goals/actions are successful like intended by the task. Ignore the action result. The website is the ground truth. Also mention if something unexpected happened like new suggestions in an input field. Shortly state why/why not",
        "memory": "Description of what has been done and what you need to remember. Be very specific. Count here ALWAYS how many times you have done something and how many remain. E.g. 0 out of 10 websites analyzed. Continue with abc and xyz",
+=======
+       "evaluation_previous_goal": "Success|Failed|Unknown - Analyze the current elements and the image to check if the previous goals/actions are succesful like intended by the task. Ignore the action result. The website is the ground truth. Also mention if something unexpected happend like new suggestions in an input field. Shortly state why/why not",
+       "memory": "Description of what has been done and what you need to remember until the end of the task",
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
        "next_goal": "What needs to be done with the next actions"
      },
      "action": [
        {
+<<<<<<< HEAD
          "one_action_name": {
            // action-specific parameter
+=======
+         "action_name": {
+           // action-specific parameters
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
          }
        },
        // ... more actions in sequence
      ]
    }
 
+<<<<<<< HEAD
 2. ACTIONS: You can specify multiple actions in the list to be executed in sequence. But always specify only one action name per item.
+=======
+2. ACTIONS: You can specify multiple actions to be executed in sequence. 
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
    Common action sequences:
    - Form filling: [
@@ -53,6 +78,7 @@ class SystemPrompt:
 
 3. ELEMENT INTERACTION:
    - Only use indexes that exist in the provided element list
+<<<<<<< HEAD
    - Each element has a unique index number (e.g., "[33]<button>")
    - Elements marked with "[]Non-interactive text" are non-interactive (for context only)
 
@@ -70,6 +96,22 @@ class SystemPrompt:
    - If you have to do something repeatedly for example the task says for "each", or "for all", or "x times", count always inside "memory" how many times you have done it and how many remain. Don't stop until you have completed like the task asked you. Only call done after the last step.
    - Don't hallucinate actions
    - If the ultimate task requires specific information - make sure to include everything in the done function. This is what the user will see. Do not just say you are done, but include the requested information of the task.
+=======
+   - Each element has a unique index number (e.g., "33[:]<button>")
+   - Elements marked with "_[:]" are non-interactive (for context only)
+
+4. NAVIGATION & ERROR HANDLING:
+   - If no suitable elements exist, use other functions to complete the task
+   - If stuck, try alternative approaches
+   - Handle popups/cookies by accepting or closing them
+   - Use scroll to find elements you are looking for
+
+5. TASK COMPLETION:
+   - Use the done action as the last action as soon as the task is complete
+   - Don't hallucinate actions
+   - If the task requires specific information - make sure to include everything in the done function. This is what the user will see.
+   - If you are running out of steps (current step), think about speeding it up, and ALWAYS use the done action as the last action.
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 6. VISUAL CONTEXT:
    - When an image is provided, use it to understand the page layout
@@ -80,15 +122,23 @@ class SystemPrompt:
    - sometimes labels overlap, so use the context to verify the correct element
 
 7. Form filling:
+<<<<<<< HEAD
    - If you fill an input field and your action sequence is interrupted, most often a list with suggestions popped up under the field and you need to first select the right element from the suggestion list.
 
 8. ACTION SEQUENCING:
    - Actions are executed in the order they appear in the list
+=======
+   - If you fill a input field and your action sequence is interrupted, most often a list with suggestions poped up under the field and you need to first select the right element from the suggestion list.
+
+8. ACTION SEQUENCING:
+   - Actions are executed in the order they appear in the list 
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
    - Each action should logically follow from the previous one
    - If the page changes after an action, the sequence is interrupted and you get the new state.
    - If content only disappears the sequence continues.
    - Only provide the action sequence until you think the page will change.
    - Try to be efficient, e.g. fill forms at once, or chain actions where nothing changes on the page like saving, extracting, checkboxes...
+<<<<<<< HEAD
    - only use multiple actions if it makes sense.
 
 9. Long tasks:
@@ -98,6 +148,9 @@ class SystemPrompt:
 10. Extraction:
 - If your task is to find information or do research - call extract_page_content on the specific pages to get and store the information.
 
+=======
+   - only use multiple actions if it makes sense. 
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 """
 		text += f'   - use maximum {self.max_actions_per_step} actions per sequence'
 		return text
@@ -114,6 +167,7 @@ INPUT STRUCTURE:
    - element_text: Visible text or element description
 
 Example:
+<<<<<<< HEAD
 [33]<button>Submit Form</button>
 [] Non-interactive text
 
@@ -121,6 +175,15 @@ Example:
 Notes:
 - Only elements with numeric indexes inside [] are interactive
 - [] elements provide context but cannot be interacted with
+=======
+33[:]<button>Submit Form</button>
+_[:] Non-interactive text
+
+
+Notes:
+- Only elements with numeric indexes are interactive
+- _[:] elements provide context but cannot be interacted with
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 """
 
 	def get_system_message(self) -> SystemMessage:
@@ -130,12 +193,23 @@ Notes:
 		Returns:
 		    str: Formatted system prompt
 		"""
+<<<<<<< HEAD
 
 		AGENT_PROMPT = f"""You are a precise browser automation agent that interacts with websites through structured commands. Your role is to:
 1. Analyze the provided webpage elements and structure
 2. Use the given information to accomplish the ultimate task
 3. Respond with valid JSON containing your next action sequence and state assessment
 
+=======
+		time_str = self.current_date.strftime('%Y-%m-%d %H:%M')
+
+		AGENT_PROMPT = f"""You are a precise browser automation agent that interacts with websites through structured commands. Your role is to:
+1. Analyze the provided webpage elements and structure
+2. Plan a sequence of actions to accomplish the given task
+3. Respond with valid JSON containing your action sequence and state assessment
+
+Current date and time: {time_str}
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 {self.input_format()}
 
@@ -169,6 +243,7 @@ class AgentMessagePrompt:
 		self.include_attributes = include_attributes
 		self.step_info = step_info
 
+<<<<<<< HEAD
 	def get_user_message(self, use_vision: bool = True) -> HumanMessage:
 		elements_text = self.state.element_tree.clickable_elements_to_string(include_attributes=self.include_attributes)
 
@@ -209,10 +284,29 @@ Interactive elements from current page:
 {elements_text}
 {step_info_description}
 """
+=======
+	def get_user_message(self) -> HumanMessage:
+		if self.step_info:
+			step_info_description = (
+				f'Current step: {self.step_info.step_number + 1}/{self.step_info.max_steps}'
+			)
+		else:
+			step_info_description = ''
+
+		state_description = f"""
+{step_info_description}
+Current url: {self.state.url}
+Available tabs:
+{self.state.tabs}
+Interactive elements:
+{self.state.element_tree.clickable_elements_to_string(include_attributes=self.include_attributes)}
+        """
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		if self.result:
 			for i, result in enumerate(self.result):
 				if result.extracted_content:
+<<<<<<< HEAD
 					state_description += f'\nAction result {i + 1}/{len(self.result)}: {result.extracted_content}'
 				if result.error:
 					# only use last 300 characters of error
@@ -220,6 +314,17 @@ Interactive elements from current page:
 					state_description += f'\nAction error {i + 1}/{len(self.result)}: ...{error}'
 
 		if self.state.screenshot and use_vision == True:
+=======
+					state_description += (
+						f'\nResult of action {i + 1}/{len(self.result)}: {result.extracted_content}'
+					)
+				if result.error:
+					# only use last 300 characters of error
+					error = result.error[-self.max_error_length :]
+					state_description += f'\nError of action {i + 1}/{len(self.result)}: ...{error}'
+
+		if self.state.screenshot:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			# Format message for vision model
 			return HumanMessage(
 				content=[
@@ -232,6 +337,7 @@ Interactive elements from current page:
 			)
 
 		return HumanMessage(content=state_description)
+<<<<<<< HEAD
 
 
 class PlannerPrompt(SystemPrompt):
@@ -259,3 +365,5 @@ Ignore the other AI messages output structures.
 
 Keep your responses concise and focused on actionable insights."""
 		)
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

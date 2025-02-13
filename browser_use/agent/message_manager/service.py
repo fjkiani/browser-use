@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+<<<<<<< HEAD
 import json
 import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Type
+=======
+import logging
+from datetime import datetime
+from typing import List, Optional, Type
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models import BaseChatModel
@@ -11,8 +17,11 @@ from langchain_core.messages import (
 	AIMessage,
 	BaseMessage,
 	HumanMessage,
+<<<<<<< HEAD
 	SystemMessage,
 	ToolMessage,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 )
 from langchain_openai import ChatOpenAI
 
@@ -32,13 +41,20 @@ class MessageManager:
 		action_descriptions: str,
 		system_prompt_class: Type[SystemPrompt],
 		max_input_tokens: int = 128000,
+<<<<<<< HEAD
 		estimated_characters_per_token: int = 3,
+=======
+		estimated_tokens_per_character: int = 3,
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		image_tokens: int = 800,
 		include_attributes: list[str] = [],
 		max_error_length: int = 400,
 		max_actions_per_step: int = 10,
+<<<<<<< HEAD
 		message_context: Optional[str] = None,
 		sensitive_data: Optional[Dict[str, str]] = None,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	):
 		self.llm = llm
 		self.system_prompt_class = system_prompt_class
@@ -46,6 +62,7 @@ class MessageManager:
 		self.history = MessageHistory()
 		self.task = task
 		self.action_descriptions = action_descriptions
+<<<<<<< HEAD
 		self.estimated_characters_per_token = estimated_characters_per_token
 		self.IMG_TOKENS = image_tokens
 		self.include_attributes = include_attributes
@@ -54,11 +71,22 @@ class MessageManager:
 		self.sensitive_data = sensitive_data
 		system_message = self.system_prompt_class(
 			self.action_descriptions,
+=======
+		self.ESTIMATED_TOKENS_PER_CHARACTER = estimated_tokens_per_character
+		self.IMG_TOKENS = image_tokens
+		self.include_attributes = include_attributes
+		self.max_error_length = max_error_length
+
+		system_message = self.system_prompt_class(
+			self.action_descriptions,
+			current_date=datetime.now(),
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			max_actions_per_step=max_actions_per_step,
 		).get_system_message()
 
 		self._add_message_with_tokens(system_message)
 		self.system_prompt = system_message
+<<<<<<< HEAD
 
 		if self.message_context:
 			context_message = HumanMessage(content='Context for the task' + self.message_context)
@@ -130,12 +158,20 @@ class MessageManager:
 			msg = AIMessage(content=plan)
 			self._add_message_with_tokens(msg, position)
 
+=======
+		task_message = HumanMessage(content=f'Your task is: {task}')
+		self._add_message_with_tokens(task_message)
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	def add_state_message(
 		self,
 		state: BrowserState,
 		result: Optional[List[ActionResult]] = None,
 		step_info: Optional[AgentStepInfo] = None,
+<<<<<<< HEAD
 		use_vision=True,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	) -> None:
 		"""Add browser state as human message"""
 
@@ -144,10 +180,17 @@ class MessageManager:
 			for r in result:
 				if r.include_in_memory:
 					if r.extracted_content:
+<<<<<<< HEAD
 						msg = HumanMessage(content='Action result: ' + str(r.extracted_content))
 						self._add_message_with_tokens(msg)
 					if r.error:
 						msg = HumanMessage(content='Action error: ' + str(r.error)[-self.max_error_length :])
+=======
+						msg = HumanMessage(content=str(r.extracted_content))
+						self._add_message_with_tokens(msg)
+					if r.error:
+						msg = HumanMessage(content=str(r.error)[-self.max_error_length :])
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 						self._add_message_with_tokens(msg)
 					result = None  # if result in history, we dont want to add it again
 
@@ -158,16 +201,27 @@ class MessageManager:
 			include_attributes=self.include_attributes,
 			max_error_length=self.max_error_length,
 			step_info=step_info,
+<<<<<<< HEAD
 		).get_user_message(use_vision)
+=======
+		).get_user_message()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		self._add_message_with_tokens(state_message)
 
 	def _remove_last_state_message(self) -> None:
 		"""Remove last state message from history"""
+<<<<<<< HEAD
 		if len(self.history.messages) > 2 and isinstance(self.history.messages[-1].message, HumanMessage):
+=======
+		if len(self.history.messages) > 2 and isinstance(
+			self.history.messages[-1].message, HumanMessage
+		):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			self.history.remove_message()
 
 	def add_model_output(self, model_output: AgentOutput) -> None:
 		"""Add model output as AI message"""
+<<<<<<< HEAD
 		tool_calls = [
 			{
 				'name': 'AgentOutput',
@@ -256,6 +310,17 @@ class MessageManager:
 
 		tokens = len(text) // self.estimated_characters_per_token  # Rough estimate if no tokenizer available
 		return tokens
+=======
+
+		content = model_output.model_dump_json(exclude_unset=True)
+		msg = AIMessage(content=content)
+		self._add_message_with_tokens(msg)
+
+	def get_messages(self) -> List[BaseMessage]:
+		"""Get current message list, potentially trimmed to max tokens"""
+		self.cut_messages()
+		return [m.message for m in self.history.messages]
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	def cut_messages(self):
 		"""Get current message list, potentially trimmed to max tokens"""
@@ -290,7 +355,11 @@ class MessageManager:
 		proportion_to_remove = diff / msg.metadata.input_tokens
 		if proportion_to_remove > 0.99:
 			raise ValueError(
+<<<<<<< HEAD
 				f'Max token limit reached - history is too long - reduce the system prompt or task. '
+=======
+				f'Max token limit reached - history is too long - reduce the system prompt or task less tasks or remove old messages. '
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				f'proportion_to_remove: {proportion_to_remove}'
 			)
 		logger.debug(
@@ -314,6 +383,7 @@ class MessageManager:
 			f'Added message with {last_msg.metadata.input_tokens} tokens - total tokens now: {self.history.total_tokens}/{self.max_input_tokens} - total messages: {len(self.history.messages)}'
 		)
 
+<<<<<<< HEAD
 	def convert_messages_for_non_function_calling_models(self, input_messages: list[BaseMessage]) -> list[BaseMessage]:
 		"""Convert messages for non-function-calling models"""
 		output_messages = []
@@ -369,3 +439,38 @@ class MessageManager:
 		except json.JSONDecodeError as e:
 			logger.warning(f'Failed to parse model output: {content} {str(e)}')
 			raise ValueError('Could not parse response.')
+=======
+	def _add_message_with_tokens(self, message: BaseMessage) -> None:
+		"""Add message with token count metadata"""
+		token_count = self._count_tokens(message)
+		metadata = MessageMetadata(input_tokens=token_count)
+		self.history.add_message(message, metadata)
+
+	def _count_tokens(self, message: BaseMessage) -> int:
+		"""Count tokens in a message using the model's tokenizer"""
+		tokens = 0
+		if isinstance(message.content, list):
+			for item in message.content:
+				if 'image_url' in item:
+					tokens += self.IMG_TOKENS
+				elif isinstance(item, dict) and 'text' in item:
+					tokens += self._count_text_tokens(item['text'])
+		else:
+			tokens += self._count_text_tokens(message.content)
+		return tokens
+
+	def _count_text_tokens(self, text: str) -> int:
+		"""Count tokens in a text string"""
+		if isinstance(self.llm, (ChatOpenAI, ChatAnthropic)):
+			try:
+				tokens = self.llm.get_num_tokens(text)
+			except Exception:
+				tokens = (
+					len(text) // self.ESTIMATED_TOKENS_PER_CHARACTER
+				)  # Rough estimate if no tokenizer available
+		else:
+			tokens = (
+				len(text) // self.ESTIMATED_TOKENS_PER_CHARACTER
+			)  # Rough estimate if no tokenizer available
+		return tokens
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

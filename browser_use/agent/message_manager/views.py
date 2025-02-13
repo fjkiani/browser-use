@@ -25,12 +25,18 @@ class MessageHistory(BaseModel):
 	messages: List[ManagedMessage] = Field(default_factory=list)
 	total_tokens: int = 0
 
+<<<<<<< HEAD
 	def add_message(self, message: BaseMessage, metadata: MessageMetadata, position: Optional[int] = None) -> None:
 		"""Add a message with metadata"""
 		if position is None:
 			self.messages.append(ManagedMessage(message=message, metadata=metadata))
 		else:
 			self.messages.insert(position, ManagedMessage(message=message, metadata=metadata))
+=======
+	def add_message(self, message: BaseMessage, metadata: MessageMetadata) -> None:
+		"""Add a message with metadata"""
+		self.messages.append(ManagedMessage(message=message, metadata=metadata))
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		self.total_tokens += metadata.input_tokens
 
 	def remove_message(self, index: int = -1) -> None:

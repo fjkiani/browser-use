@@ -176,6 +176,7 @@ cookies.json
 AgentHistory.json
 cv_04_24.pdf
 AgentHistoryList.json
+<<<<<<< HEAD
 *.gif
 gcp-login.json
 .vscode
@@ -184,3 +185,6 @@ gcp-login.json
 *.txt
 *.pdf
 *.csv
+=======
+*.gif
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

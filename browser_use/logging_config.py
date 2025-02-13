@@ -2,10 +2,13 @@ import logging
 import os
 import sys
 
+<<<<<<< HEAD
 from dotenv import load_dotenv
 
 load_dotenv()
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 def addLoggingLevel(levelName, levelNum, methodName=None):
 	"""
@@ -77,7 +80,11 @@ def setup_logging():
 
 	class BrowserUseFormatter(logging.Formatter):
 		def format(self, record):
+<<<<<<< HEAD
 			if type(record.name) == str and record.name.startswith('browser_use.'):
+=======
+			if record.name.startswith('browser_use.'):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				record.name = record.name.split('.')[-2]
 			return super().format(record)
 
@@ -122,10 +129,13 @@ def setup_logging():
 		'openai',
 		'httpcore',
 		'charset_normalizer',
+<<<<<<< HEAD
 		'anthropic._base_client',
 		'PIL.PngImagePlugin',
 		'trafilatura.htmlprocessing',
 		'trafilatura',
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	]:
 		third_party = logging.getLogger(logger)
 		third_party.setLevel(logging.ERROR)

@@ -1,4 +1,5 @@
 (
+<<<<<<< HEAD
     args = { doHighlightElements: true, focusHighlightIndex: -1, viewportExpansion: 0 }
 ) => {
     const { doHighlightElements, focusHighlightIndex, viewportExpansion } = args;
@@ -7,24 +8,43 @@
     // Quick check to confirm the script receives focusHighlightIndex
     console.log('focusHighlightIndex:', focusHighlightIndex);
 
+=======
+    doHighlightElements = true
+) => {
+    let highlightIndex = 0; // Reset highlight index
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
     function highlightElement(element, index, parentIframe = null) {
         // Create or get highlight container
         let container = document.getElementById('playwright-highlight-container');
         if (!container) {
             container = document.createElement('div');
             container.id = 'playwright-highlight-container';
+<<<<<<< HEAD
             container.style.position = 'absolute';
+=======
+            container.style.position = 'fixed';
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
             container.style.pointerEvents = 'none';
             container.style.top = '0';
             container.style.left = '0';
             container.style.width = '100%';
             container.style.height = '100%';
             container.style.zIndex = '2147483647'; // Maximum z-index value
+<<<<<<< HEAD
             document.body.appendChild(container);        }
 
         // Generate a color based on the index
         const colors = [
             '#FF0000', '#00FF00', '#0000FF', '#FFA500',
+=======
+            document.documentElement.appendChild(container);
+        }
+
+        // Generate a color based on the index
+        const colors = [
+            '#FF0000', '#00FF00', '#0000FF', '#FFA500', 
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
             '#800080', '#008080', '#FF69B4', '#4B0082',
             '#FF4500', '#2E8B57', '#DC143C', '#4682B4'
         ];
@@ -40,10 +60,17 @@
         overlay.style.pointerEvents = 'none';
         overlay.style.boxSizing = 'border-box';
 
+<<<<<<< HEAD
         // Position overlay based on element, including scroll position
         const rect = element.getBoundingClientRect();
         let top = rect.top + window.scrollY;
         let left = rect.left + window.scrollX;
+=======
+        // Position overlay based on element
+        const rect = element.getBoundingClientRect();
+        let top = rect.top;
+        let left = rect.left;
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
         // Adjust position if element is inside an iframe
         if (parentIframe) {
@@ -71,7 +98,11 @@
         // Calculate label position
         const labelWidth = 20; // Approximate width
         const labelHeight = 16; // Approximate height
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
         // Default position (top-right corner inside the box)
         let labelTop = top + 2;
         let labelLeft = left + rect.width - labelWidth - 2;
@@ -83,6 +114,15 @@
             labelLeft = left + rect.width - labelWidth;
         }
 
+<<<<<<< HEAD
+=======
+        // Ensure label stays within viewport
+        if (labelTop < 0) labelTop = top + 2;
+        if (labelLeft < 0) labelLeft = left + 2;
+        if (labelLeft + labelWidth > window.innerWidth) {
+            labelLeft = left + rect.width - labelWidth - 2;
+        }
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
         label.style.top = `${labelTop}px`;
         label.style.left = `${labelLeft}px`;
@@ -137,11 +177,14 @@
 
     // Helper function to check if element is interactive
     function isInteractiveElement(element) {
+<<<<<<< HEAD
         // Immediately return false for body tag
         if (element.tagName.toLowerCase() === 'body') {
             return false;
         }
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
         // Base interactive elements and roles
         const interactiveElements = new Set([
             'a', 'button', 'details', 'embed', 'input', 'label',
@@ -152,8 +195,13 @@
             'button', 'menu', 'menuitem', 'link', 'checkbox', 'radio',
             'slider', 'tab', 'tabpanel', 'textbox', 'combobox', 'grid',
             'listbox', 'option', 'progressbar', 'scrollbar', 'searchbox',
+<<<<<<< HEAD
             'switch', 'tree', 'treeitem', 'spinbutton', 'tooltip', 'a-button-inner', 'a-dropdown-button', 'click', 
             'menuitemcheckbox', 'menuitemradio', 'a-button-text', 'button-text', 'button-icon', 'button-icon-only', 'button-text-icon-only', 'dropdown', 'combobox'
+=======
+            'switch', 'tree', 'treeitem', 'spinbutton', 'tooltip', 'a-button-inner', 'a-dropdown-button', 'click',
+            'menuitemcheckbox', 'menuitemradio', 'a-button-text', 'button-text', 'button-icon', 'button-icon-only', 'button-text-icon-only', 'dropdown', 'combobox' 
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
         ]);
 
         const tagName = element.tagName.toLowerCase();
@@ -161,6 +209,7 @@
         const ariaRole = element.getAttribute('aria-role');
         const tabIndex = element.getAttribute('tabindex');
 
+<<<<<<< HEAD
         // Add check for specific class
         const hasAddressInputClass = element.classList.contains('address-input__container__input');
 
@@ -170,6 +219,13 @@
             interactiveRoles.has(role) ||
             interactiveRoles.has(ariaRole) ||
             (tabIndex !== null && tabIndex !== '-1' && element.parentElement?.tagName.toLowerCase() !== 'body') ||
+=======
+        // Basic role/attribute checks
+        const hasInteractiveRole = interactiveElements.has(tagName) ||
+            interactiveRoles.has(role) ||
+            interactiveRoles.has(ariaRole) ||
+            (tabIndex !== null && tabIndex !== '-1') ||
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
             element.getAttribute('data-action') === 'a-dropdown-select' ||
             element.getAttribute('data-action') === 'a-dropdown-button';
 
@@ -245,17 +301,24 @@
         const isDraggable = element.draggable ||
             element.getAttribute('draggable') === 'true';
 
+<<<<<<< HEAD
         // Additional check to prevent body from being marked as interactive
         if (element.tagName.toLowerCase() === 'body' || element.parentElement?.tagName.toLowerCase() === 'body') {
             return false;
         }
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
         return hasAriaProps ||
             // hasClickStyling ||
             hasClickHandler ||
             hasClickListeners ||
             // isFormRelated ||
             isDraggable;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
     }
 
     // Helper function to check if element is visible
@@ -302,6 +365,7 @@
 
         // Regular DOM elements
         const rect = element.getBoundingClientRect();
+<<<<<<< HEAD
 
         // If viewportExpansion is -1, check if element is the top one at its position
         if (viewportExpansion === -1) {
@@ -346,6 +410,11 @@
                 return true; // Consider elements with center outside viewport as visible
             }
 
+=======
+        const point = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+
+        try {
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
             const topEl = document.elementFromPoint(point.x, point.y);
             if (!topEl) return false;
 
@@ -406,6 +475,7 @@
             children: [],
         };
 
+<<<<<<< HEAD
         // Add coordinates for element nodes
         if (node.nodeType === Node.ELEMENT_NODE) {
             const rect = node.getBoundingClientRect();
@@ -473,6 +543,8 @@
             };
         }
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
         // Copy all attributes if the node is an element
         if (node.nodeType === Node.ELEMENT_NODE && node.attributes) {
             // Use getAttributeNames() instead of directly iterating attributes
@@ -495,6 +567,7 @@
             if (isInteractive && isVisible && isTop) {
                 nodeData.highlightIndex = highlightIndex++;
                 if (doHighlightElements) {
+<<<<<<< HEAD
                     if(focusHighlightIndex >= 0){
                         if(focusHighlightIndex === nodeData.highlightIndex){
                             highlightElement(node, nodeData.highlightIndex, parentIframe);
@@ -502,6 +575,9 @@
                     } else {
                         highlightElement(node, nodeData.highlightIndex, parentIframe);
                     }
+=======
+                    highlightElement(node, nodeData.highlightIndex, parentIframe);
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
                 }
             }
         }
@@ -549,4 +625,8 @@
 
 
     return buildDomTree(document.body);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

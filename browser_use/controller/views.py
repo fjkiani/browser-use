@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 from typing import Optional
 
 from pydantic import BaseModel, model_validator
+=======
+from typing import Literal, Optional
+
+from pydantic import BaseModel
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 
 # Action Input Models
@@ -35,12 +41,20 @@ class OpenTabAction(BaseModel):
 	url: str
 
 
+<<<<<<< HEAD
+=======
+class ExtractPageContentAction(BaseModel):
+	value: Literal['text', 'markdown', 'html'] = 'text'
+
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 class ScrollAction(BaseModel):
 	amount: Optional[int] = None  # The number of pixels to scroll. If None, scroll down/up one page
 
 
 class SendKeysAction(BaseModel):
 	keys: str
+<<<<<<< HEAD
 
 
 class NoParamsAction(BaseModel):
@@ -58,3 +72,5 @@ class NoParamsAction(BaseModel):
 		# If you want to silently allow unknown fields at top-level,
 		# set extra = 'allow' as well:
 		extra = 'allow'
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

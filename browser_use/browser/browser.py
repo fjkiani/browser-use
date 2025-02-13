@@ -36,9 +36,12 @@ class BrowserConfig:
 		wss_url: None
 			Connect to a browser instance via WebSocket
 
+<<<<<<< HEAD
 		cdp_url: None
 			Connect to a browser instance via CDP
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		chrome_instance_path: None
 			Path to a Chrome instance to use to connect to your normal browser
 			e.g. '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
@@ -49,7 +52,10 @@ class BrowserConfig:
 	extra_chromium_args: list[str] = field(default_factory=list)
 	chrome_instance_path: str | None = None
 	wss_url: str | None = None
+<<<<<<< HEAD
 	cdp_url: str | None = None
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	proxy: ProxySettings | None = field(default=None)
 	new_context_config: BrowserContextConfig = field(default_factory=BrowserContextConfig)
@@ -74,6 +80,7 @@ class Browser:
 		self.playwright: Playwright | None = None
 		self.playwright_browser: PlaywrightBrowser | None = None
 
+<<<<<<< HEAD
 		self.disable_security_args = []
 		if self.config.disable_security:
 			self.disable_security_args = [
@@ -82,6 +89,8 @@ class Browser:
 				'--disable-features=IsolateOrigins,site-per-process',
 			]
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	async def new_context(
 		self, config: BrowserContextConfig = BrowserContextConfig()
 	) -> BrowserContext:
@@ -105,6 +114,7 @@ class Browser:
 
 		return self.playwright_browser
 
+<<<<<<< HEAD
 	async def _setup_cdp(self, playwright: Playwright) -> PlaywrightBrowser:
 		"""Sets up and returns a Playwright Browser instance with anti-detection measures."""
 		if not self.config.cdp_url:
@@ -134,11 +144,49 @@ class Browser:
 			response = requests.get('http://localhost:9222/json/version', timeout=2)
 			if response.status_code == 200:
 				logger.info('Reusing existing Chrome instance')
+=======
+	async def _setup_browser(self, playwright: Playwright) -> PlaywrightBrowser:
+		"""Sets up and returns a Playwright Browser instance with anti-detection measures."""
+		if self.config.wss_url:
+			browser = await playwright.chromium.connect(self.config.wss_url)
+			return browser
+		elif self.config.chrome_instance_path:
+			import subprocess
+
+			import requests
+
+			try:
+				# Check if browser is already running
+				response = requests.get('http://localhost:9222/json/version', timeout=2)
+				if response.status_code == 200:
+					logger.info('Reusing existing Chrome instance')
+					browser = await playwright.chromium.connect_over_cdp(
+						endpoint_url='http://localhost:9222',
+						timeout=20000,  # 20 second timeout for connection
+					)
+					return browser
+			except requests.ConnectionError:
+				logger.debug('No existing Chrome instance found, starting a new one')
+
+			# Start a new Chrome instance
+			subprocess.Popen(
+				[
+					self.config.chrome_instance_path,
+					'--remote-debugging-port=9222',
+				],
+				stdout=subprocess.DEVNULL,
+				stderr=subprocess.DEVNULL,
+			)
+
+			# Attempt to connect again after starting a new instance
+			try:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				browser = await playwright.chromium.connect_over_cdp(
 					endpoint_url='http://localhost:9222',
 					timeout=20000,  # 20 second timeout for connection
 				)
 				return browser
+<<<<<<< HEAD
 		except requests.ConnectionError:
 			logger.debug('No existing Chrome instance found, starting a new one')
 
@@ -216,6 +264,51 @@ class Browser:
 		except Exception as e:
 			logger.error(f'Failed to initialize Playwright browser: {str(e)}')
 			raise
+=======
+			except Exception as e:
+				logger.error(f'Failed to start a new Chrome instance.: {str(e)}')
+				raise RuntimeError(
+					' To start chrome in Debug mode, you need to close all existing Chrome instances and try again otherwise we can not connect to the instance.'
+				)
+
+		else:
+			try:
+				disable_security_args = []
+				if self.config.disable_security:
+					disable_security_args = [
+						'--disable-web-security',
+						'--disable-site-isolation-trials',
+						'--disable-features=IsolateOrigins,site-per-process',
+					]
+
+				browser = await playwright.chromium.launch(
+					headless=self.config.headless,
+					args=[
+						'--no-sandbox',
+						'--disable-blink-features=AutomationControlled',
+						'--disable-infobars',
+						'--disable-background-timer-throttling',
+						'--disable-popup-blocking',
+						'--disable-backgrounding-occluded-windows',
+						'--disable-renderer-backgrounding',
+						'--disable-window-activation',
+						'--disable-focus-on-load',
+						'--no-first-run',
+						'--no-default-browser-check',
+						'--no-startup-window',
+						'--window-position=0,0',
+						# '--window-size=1280,1000',
+					]
+					+ disable_security_args
+					+ self.config.extra_chromium_args,
+					proxy=self.config.proxy,
+				)
+
+				return browser
+			except Exception as e:
+				logger.error(f'Failed to initialize Playwright browser: {str(e)}')
+				raise
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	async def close(self):
 		"""Close the browser instance"""

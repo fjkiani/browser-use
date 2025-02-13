@@ -37,7 +37,10 @@ class ActionResult(BaseModel):
 class AgentBrain(BaseModel):
 	"""Current state of the agent"""
 
+<<<<<<< HEAD
 	page_summary: str
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	evaluation_previous_goal: str
 	memory: str
 	next_goal: str
@@ -75,7 +78,13 @@ class AgentHistory(BaseModel):
 	model_config = ConfigDict(arbitrary_types_allowed=True, protected_namespaces=())
 
 	@staticmethod
+<<<<<<< HEAD
 	def get_interacted_element(model_output: AgentOutput, selector_map: SelectorMap) -> list[DOMHistoryElement | None]:
+=======
+	def get_interacted_element(
+		model_output: AgentOutput, selector_map: SelectorMap
+	) -> list[DOMHistoryElement | None]:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		elements = []
 		for action in model_output.action:
 			index = action.get_index()
@@ -92,7 +101,13 @@ class AgentHistory(BaseModel):
 		# Handle action serialization
 		model_output_dump = None
 		if self.model_output:
+<<<<<<< HEAD
 			action_dump = [action.model_dump(exclude_none=True) for action in self.model_output.action]
+=======
+			action_dump = [
+				action.model_dump(exclude_none=True) for action in self.model_output.action
+			]
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			model_output_dump = {
 				'current_state': self.model_output.current_state.model_dump(),
 				'action': action_dump,  # This preserves the actual action data
@@ -135,7 +150,13 @@ class AgentHistoryList(BaseModel):
 		}
 
 	@classmethod
+<<<<<<< HEAD
 	def load_from_file(cls, filepath: str | Path, output_model: Type[AgentOutput]) -> 'AgentHistoryList':
+=======
+	def load_from_file(
+		cls, filepath: str | Path, output_model: Type[AgentOutput]
+	) -> 'AgentHistoryList':
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""Load history from JSON file"""
 		with open(filepath, 'r', encoding='utf-8') as f:
 			data = json.load(f)
@@ -172,7 +193,15 @@ class AgentHistoryList(BaseModel):
 
 	def is_done(self) -> bool:
 		"""Check if the agent is done"""
+<<<<<<< HEAD
 		if self.history and len(self.history[-1].result) > 0 and self.history[-1].result[-1].is_done:
+=======
+		if (
+			self.history
+			and len(self.history[-1].result) > 0
+			and self.history[-1].result[-1].is_done
+		):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			return self.history[-1].result[-1].is_done
 		return False
 
@@ -190,12 +219,16 @@ class AgentHistoryList(BaseModel):
 
 	def action_names(self) -> list[str]:
 		"""Get all action names from history"""
+<<<<<<< HEAD
 		action_names = []
 		for action in self.model_actions():
 			actions = list(action.keys())
 			if actions:
 				action_names.append(actions[0])
 		return action_names
+=======
+		return [list(action.keys())[0] for action in self.model_actions()]
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	def model_thoughts(self) -> list[AgentBrain]:
 		"""Get all thoughts from history"""
@@ -212,9 +245,14 @@ class AgentHistoryList(BaseModel):
 
 		for h in self.history:
 			if h.model_output:
+<<<<<<< HEAD
 				for action, interacted_element in zip(h.model_output.action, h.state.interacted_element):
 					output = action.model_dump(exclude_none=True)
 					output['interacted_element'] = interacted_element
+=======
+				for action in h.model_output.action:
+					output = action.model_dump(exclude_none=True)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 					outputs.append(output)
 		return outputs
 

@@ -2,7 +2,11 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING, Dict, List, Optional
 
+<<<<<<< HEAD
 from browser_use.dom.history_tree_processor.view import CoordinateSet, HashedDomElement, ViewportInfo
+=======
+from browser_use.dom.history_tree_processor.view import HashedDomElement
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 # Avoid circular import issues
 if TYPE_CHECKING:
@@ -45,9 +49,12 @@ class DOMElementNode(DOMBaseNode):
 	is_top_element: bool = False
 	shadow_root: bool = False
 	highlight_index: Optional[int] = None
+<<<<<<< HEAD
 	viewport_coordinates: Optional[CoordinateSet] = None
 	page_coordinates: Optional[CoordinateSet] = None
 	viewport_info: Optional[ViewportInfo] = None
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	def __repr__(self) -> str:
 		tag_str = f'<{self.tag_name}'
@@ -81,6 +88,7 @@ class DOMElementNode(DOMBaseNode):
 
 		return HistoryTreeProcessor._hash_dom_element(self)
 
+<<<<<<< HEAD
 	def get_all_text_till_next_clickable_element(self, max_depth: int = -1) -> str:
 		text_parts = []
 
@@ -90,15 +98,33 @@ class DOMElementNode(DOMBaseNode):
 
 			# Skip this branch if we hit a highlighted element (except for the current node)
 			if isinstance(node, DOMElementNode) and node != self and node.highlight_index is not None:
+=======
+	def get_all_text_till_next_clickable_element(self) -> str:
+		text_parts = []
+
+		def collect_text(node: DOMBaseNode) -> None:
+			# Skip this branch if we hit a highlighted element (except for the current node)
+			if (
+				isinstance(node, DOMElementNode)
+				and node != self
+				and node.highlight_index is not None
+			):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				return
 
 			if isinstance(node, DOMTextNode):
 				text_parts.append(node.text)
 			elif isinstance(node, DOMElementNode):
 				for child in node.children:
+<<<<<<< HEAD
 					collect_text(child, current_depth + 1)
 
 		collect_text(self, 0)
+=======
+					collect_text(child)
+
+		collect_text(self)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		return '\n'.join(text_parts).strip()
 
 	def clickable_elements_to_string(self, include_attributes: list[str] = []) -> str:
@@ -112,10 +138,19 @@ class DOMElementNode(DOMBaseNode):
 					attributes_str = ''
 					if include_attributes:
 						attributes_str = ' ' + ' '.join(
+<<<<<<< HEAD
 							f'{key}="{value}"' for key, value in node.attributes.items() if key in include_attributes
 						)
 					formatted_text.append(
 						f'[{node.highlight_index}]<{node.tag_name}{attributes_str}>{node.get_all_text_till_next_clickable_element()}</{node.tag_name}>'
+=======
+							f'{key}="{value}"'
+							for key, value in node.attributes.items()
+							if key in include_attributes
+						)
+					formatted_text.append(
+						f'{node.highlight_index}[:]<{node.tag_name}{attributes_str}>{node.get_all_text_till_next_clickable_element()}</{node.tag_name}>'
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 					)
 
 				# Process children regardless
@@ -125,7 +160,11 @@ class DOMElementNode(DOMBaseNode):
 			elif isinstance(node, DOMTextNode):
 				# Add text only if it doesn't have a highlighted parent
 				if not node.has_parent_with_highlight_index():
+<<<<<<< HEAD
 					formatted_text.append(f'[]{node.text}')
+=======
+					formatted_text.append(f'_[:]{node.text}')
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		process_node(self, 0)
 		return '\n'.join(formatted_text)
@@ -152,11 +191,14 @@ class DOMElementNode(DOMBaseNode):
 
 		return None
 
+<<<<<<< HEAD
 	def get_advanced_css_selector(self) -> str:
 		from browser_use.browser.context import BrowserContext
 
 		return BrowserContext._enhanced_css_selector_for_element(self)
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 class ElementTreeSerializer:
 	@staticmethod

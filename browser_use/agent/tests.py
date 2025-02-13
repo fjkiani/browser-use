@@ -37,12 +37,22 @@ def action_registry():
 	registry = Registry()
 
 	# Register the actions we need for testing
+<<<<<<< HEAD
 	@registry.action(description='Click an element', param_model=ClickElementAction)
+=======
+	@registry.action(
+		description='Click an element', requires_browser=True, param_model=ClickElementAction
+	)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	def click_element(params: ClickElementAction, browser=None):
 		pass
 
 	@registry.action(
 		description='Extract page content',
+<<<<<<< HEAD
+=======
+		requires_browser=True,
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		param_model=ExtractPageContentAction,
 	)
 	def extract_page_content(params: ExtractPageContentAction, browser=None):
@@ -69,10 +79,14 @@ def sample_history(action_registry):
 		AgentHistory(
 			model_output=AgentOutput(
 				current_state=AgentBrain(
+<<<<<<< HEAD
 					page_summary='I need to find the founders of browser-use',
 					evaluation_previous_goal='None',
 					memory='Started task',
 					next_goal='Click button',
+=======
+					evaluation_previous_goal='None', memory='Started task', next_goal='Click button'
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				),
 				action=[click_action],
 			),
@@ -112,7 +126,10 @@ def sample_history(action_registry):
 		AgentHistory(
 			model_output=AgentOutput(
 				current_state=AgentBrain(
+<<<<<<< HEAD
 					page_summary='I found out that the founders are John Doe and Jane Smith. I need to draft them a message.',
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 					evaluation_previous_goal='Extracted content',
 					memory='Content extracted',
 					next_goal='Finish task',

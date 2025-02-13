@@ -23,7 +23,11 @@ from playwright.async_api import (
 	Page,
 )
 
+<<<<<<< HEAD
 from browser_use.browser.views import BrowserError, BrowserState, TabInfo, URLNotAllowedError
+=======
+from browser_use.browser.views import BrowserError, BrowserState, TabInfo
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 from browser_use.dom.service import DomService
 from browser_use.dom.views import DOMElementNode, SelectorMap
 from browser_use.utils import time_execution_sync
@@ -72,6 +76,7 @@ class BrowserContextConfig:
 
 		no_viewport: False
 			Disable viewport
+<<<<<<< HEAD
 
 		save_recording_path: None
 			Path to save video recordings
@@ -100,6 +105,13 @@ class BrowserContextConfig:
 
 		include_dynamic_attributes: bool = True
 			Include dynamic attributes in the CSS selector. If you want to reuse the css_selectors, it might be better to set this to False.
+=======
+		save_recording_path: None
+			Path to save video recordings
+
+		trace_path: None
+			Path to save trace files. It will auto name the file with the TRACE_PATH/{context_id}.zip
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	"""
 
 	cookies_file: str | None = None
@@ -110,6 +122,7 @@ class BrowserContextConfig:
 
 	disable_security: bool = False
 
+<<<<<<< HEAD
 	browser_window_size: BrowserContextWindowSize = field(default_factory=lambda: {'width': 1280, 'height': 1100})
 	no_viewport: Optional[bool] = None
 
@@ -125,6 +138,15 @@ class BrowserContextConfig:
 	viewport_expansion: int = 500
 	allowed_domains: list[str] | None = None
 	include_dynamic_attributes: bool = True
+=======
+	browser_window_size: BrowserContextWindowSize = field(
+		default_factory=lambda: {'width': 1280, 'height': 1100}
+	)
+	no_viewport: Optional[bool] = None
+
+	save_recording_path: str | None = None
+	trace_path: str | None = None
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 
 @dataclass
@@ -171,7 +193,13 @@ class BrowserContext:
 
 			if self.config.trace_path:
 				try:
+<<<<<<< HEAD
 					await self.session.context.tracing.stop(path=os.path.join(self.config.trace_path, f'{self.context_id}.zip'))
+=======
+					await self.session.context.tracing.stop(
+						path=os.path.join(self.config.trace_path, f'{self.context_id}.zip')
+					)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				except Exception as e:
 					logger.debug(f'Failed to stop tracing: {e}')
 
@@ -201,20 +229,50 @@ class BrowserContext:
 		playwright_browser = await self.browser.get_playwright_browser()
 
 		context = await self._create_context(playwright_browser)
+<<<<<<< HEAD
 		self._add_new_page_listener(context)
 		page = await context.new_page()
 
 		# Instead of calling _update_state(), create an empty initial state
 		initial_state = self._get_initial_state(page)
+=======
+		page = await context.new_page()
+
+		# Instead of calling _update_state(), create an empty initial state
+		initial_state = BrowserState(
+			element_tree=DOMElementNode(
+				tag_name='root',
+				is_visible=True,
+				parent=None,
+				xpath='',
+				attributes={},
+				children=[],
+			),
+			selector_map={},
+			url=page.url,
+			title=await page.title(),
+			screenshot=None,
+			tabs=[],
+		)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		self.session = BrowserSession(
 			context=context,
 			current_page=page,
 			cached_state=initial_state,
 		)
+<<<<<<< HEAD
 		return self.session
 
 	def _add_new_page_listener(self, context: PlaywrightBrowserContext):
+=======
+
+		await self._add_new_page_listener(context)
+
+		return self.session
+
+	async def _add_new_page_listener(self, context: PlaywrightBrowserContext):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		async def on_page(page: Page):
 			await page.wait_for_load_state()
 			logger.debug(f'New page opened: {page.url}')
@@ -236,9 +294,13 @@ class BrowserContext:
 
 	async def _create_context(self, browser: PlaywrightBrowser):
 		"""Creates a new browser context with anti-detection measures and loads cookies if available."""
+<<<<<<< HEAD
 		if self.browser.config.cdp_url and len(browser.contexts) > 0:
 			context = browser.contexts[0]
 		elif self.browser.config.chrome_instance_path and len(browser.contexts) > 0:
+=======
+		if self.browser.config.chrome_instance_path and len(browser.contexts) > 0:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			# Connect to existing Chrome instance instead of creating new one
 			context = browser.contexts[0]
 		else:
@@ -246,13 +308,23 @@ class BrowserContext:
 			context = await browser.new_context(
 				viewport=self.config.browser_window_size,
 				no_viewport=False,
+<<<<<<< HEAD
 				user_agent=self.config.user_agent,
+=======
+				user_agent=(
+					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+					'(KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
+				),
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				java_script_enabled=True,
 				bypass_csp=self.config.disable_security,
 				ignore_https_errors=self.config.disable_security,
 				record_video_dir=self.config.save_recording_path,
+<<<<<<< HEAD
 				record_video_size=self.config.browser_window_size,
 				locale=self.config.locale,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			)
 
 		if self.config.trace_path:
@@ -275,7 +347,11 @@ class BrowserContext:
 
 			// Languages
 			Object.defineProperty(navigator, 'languages', {
+<<<<<<< HEAD
 				get: () => ['en-US']
+=======
+				get: () => ['en-US', 'en']
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			});
 
 			// Plugins
@@ -293,12 +369,15 @@ class BrowserContext:
 					Promise.resolve({ state: Notification.permission }) :
 					originalQuery(parameters)
 			);
+<<<<<<< HEAD
 			(function () {
 				const originalAttachShadow = Element.prototype.attachShadow;
 				Element.prototype.attachShadow = function attachShadow(options) {
 					return originalAttachShadow.call(this, { ...options, mode: "open" });
 				};
 			})();
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			"""
 		)
 
@@ -457,7 +536,14 @@ class BrowserContext:
 			while True:
 				await asyncio.sleep(0.1)
 				now = asyncio.get_event_loop().time()
+<<<<<<< HEAD
 				if len(pending_requests) == 0 and (now - last_activity) >= self.config.wait_for_network_idle_page_load_time:
+=======
+				if (
+					len(pending_requests) == 0
+					and (now - last_activity) >= self.config.wait_for_network_idle_page_load_time
+				):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 					break
 				if now - start_time > self.config.maximum_wait_page_load_time:
 					logger.debug(
@@ -471,17 +557,27 @@ class BrowserContext:
 			page.remove_listener('request', on_request)
 			page.remove_listener('response', on_response)
 
+<<<<<<< HEAD
 		logger.debug(f'Network stabilized for {self.config.wait_for_network_idle_page_load_time} seconds')
+=======
+		logger.debug(
+			f'Network stabilized for {self.config.wait_for_network_idle_page_load_time} seconds'
+		)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	async def _wait_for_page_and_frames_load(self, timeout_overwrite: float | None = None):
 		"""
 		Ensures page is fully loaded before continuing.
 		Waits for either network to be idle or minimum WAIT_TIME, whichever is longer.
+<<<<<<< HEAD
 		Also checks if the loaded URL is allowed.
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""
 		# Start timing
 		start_time = time.time()
 
+<<<<<<< HEAD
 		# Wait for page load
 		try:
 			await self._wait_for_stable_network()
@@ -491,6 +587,13 @@ class BrowserContext:
 			await self._check_and_handle_navigation(page)
 		except URLNotAllowedError as e:
 			raise e
+=======
+		# await asyncio.sleep(self.minimum_wait_page_load_time)
+
+		# Wait for page load
+		try:
+			await self._wait_for_stable_network()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		except Exception:
 			logger.warning('Page load failed, continuing...')
 			pass
@@ -499,12 +602,19 @@ class BrowserContext:
 		elapsed = time.time() - start_time
 		remaining = max((timeout_overwrite or self.config.minimum_wait_page_load_time) - elapsed, 0)
 
+<<<<<<< HEAD
 		logger.debug(f'--Page loaded in {elapsed:.2f} seconds, waiting for additional {remaining:.2f} seconds')
+=======
+		logger.debug(
+			f'--Page loaded in {elapsed:.2f} seconds, waiting for additional {remaining:.2f} seconds'
+		)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		# Sleep remaining time if needed
 		if remaining > 0:
 			await asyncio.sleep(remaining)
 
+<<<<<<< HEAD
 	def _is_url_allowed(self, url: str) -> bool:
 		"""Check if a URL is allowed based on the whitelist configuration."""
 		if not self.config.allowed_domains:
@@ -544,6 +654,10 @@ class BrowserContext:
 		if not self._is_url_allowed(url):
 			raise BrowserError(f'Navigation to non-allowed URL: {url}')
 
+=======
+	async def navigate_to(self, url: str):
+		"""Navigate to a URL"""
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		page = await self.get_current_page()
 		await page.goto(url)
 		await page.wait_for_load_state()
@@ -557,6 +671,7 @@ class BrowserContext:
 	async def go_back(self):
 		"""Navigate back in history"""
 		page = await self.get_current_page()
+<<<<<<< HEAD
 		try:
 			# 10 ms timeout
 			await page.go_back(timeout=10, wait_until='domcontentloaded')
@@ -564,15 +679,24 @@ class BrowserContext:
 		except Exception as e:
 			# Continue even if its not fully loaded, because we wait later for the page to load
 			logger.debug(f'During go_back: {e}')
+=======
+		await page.go_back()
+		await page.wait_for_load_state()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	async def go_forward(self):
 		"""Navigate forward in history"""
 		page = await self.get_current_page()
+<<<<<<< HEAD
 		try:
 			await page.go_forward(timeout=10, wait_until='domcontentloaded')
 		except Exception as e:
 			# Continue even if its not fully loaded, because we wait later for the page to load
 			logger.debug(f'During go_forward: {e}')
+=======
+		await page.go_forward()
+		await page.wait_for_load_state()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 	async def close_current_tab(self):
 		"""Close the current tab"""
@@ -597,11 +721,19 @@ class BrowserContext:
 		return await page.evaluate(script)
 
 	@time_execution_sync('--get_state')  # This decorator might need to be updated to handle async
+<<<<<<< HEAD
 	async def get_state(self) -> BrowserState:
 		"""Get the current state of the browser"""
 		await self._wait_for_page_and_frames_load()
 		session = await self.get_session()
 		session.cached_state = await self._update_state()
+=======
+	async def get_state(self, use_vision: bool = False) -> BrowserState:
+		"""Get the current state of the browser"""
+		await self._wait_for_page_and_frames_load()
+		session = await self.get_session()
+		session.cached_state = await self._update_state(use_vision=use_vision)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		# Save cookies if a file is specified
 		if self.config.cookies_file:
@@ -609,7 +741,11 @@ class BrowserContext:
 
 		return session.cached_state
 
+<<<<<<< HEAD
 	async def _update_state(self, focus_element: int = -1) -> BrowserState:
+=======
+	async def _update_state(self, use_vision: bool = False) -> BrowserState:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""Update and return state."""
 		session = await self.get_session()
 
@@ -627,11 +763,16 @@ class BrowserContext:
 				page = session.current_page
 				logger.debug(f'Switched to page: {await page.title()}')
 			else:
+<<<<<<< HEAD
 				raise BrowserError('Browser closed: no valid pages available')
+=======
+				raise BrowserError('No valid pages available')
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		try:
 			await self.remove_highlights()
 			dom_service = DomService(page)
+<<<<<<< HEAD
 			content = await dom_service.get_clickable_elements(
 				focus_element=focus_element,
 				viewport_expansion=self.config.viewport_expansion,
@@ -640,6 +781,13 @@ class BrowserContext:
 
 			screenshot_b64 = await self.take_screenshot()
 			pixels_above, pixels_below = await self.get_scroll_info(page)
+=======
+			content = await dom_service.get_clickable_elements()
+
+			screenshot_b64 = None
+			if use_vision:
+				screenshot_b64 = await self.take_screenshot()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 			self.current_state = BrowserState(
 				element_tree=content.element_tree,
@@ -648,8 +796,11 @@ class BrowserContext:
 				title=await page.title(),
 				tabs=await self.get_tabs_info(),
 				screenshot=screenshot_b64,
+<<<<<<< HEAD
 				pixels_above=pixels_above,
 				pixels_below=pixels_below,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			)
 
 			return self.current_state
@@ -713,9 +864,13 @@ class BrowserContext:
 	# endregion
 
 	# region - User Actions
+<<<<<<< HEAD
 
 	@classmethod
 	def _convert_simple_xpath_to_css_selector(cls, xpath: str) -> str:
+=======
+	def _convert_simple_xpath_to_css_selector(self, xpath: str) -> str:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""Converts simple XPath expressions to CSS selectors."""
 		if not xpath:
 			return ''
@@ -744,7 +899,11 @@ class BrowserContext:
 						# Handle numeric indices
 						if idx.isdigit():
 							index = int(idx) - 1
+<<<<<<< HEAD
 							base_part += f':nth-of-type({index + 1})'
+=======
+							base_part += f':nth-of-type({index+1})'
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 						# Handle last() function
 						elif idx == 'last()':
 							base_part += ':last-of-type'
@@ -762,8 +921,12 @@ class BrowserContext:
 		base_selector = ' > '.join(css_parts)
 		return base_selector
 
+<<<<<<< HEAD
 	@classmethod
 	def _enhanced_css_selector_for_element(cls, element: DOMElementNode, include_dynamic_attributes: bool = True) -> str:
+=======
+	def _enhanced_css_selector_for_element(self, element: DOMElementNode) -> str:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""
 		Creates a CSS selector for a DOM element, handling various edge cases and special characters.
 
@@ -775,10 +938,17 @@ class BrowserContext:
 		"""
 		try:
 			# Get base selector from XPath
+<<<<<<< HEAD
 			css_selector = cls._convert_simple_xpath_to_css_selector(element.xpath)
 
 			# Handle class attributes
 			if 'class' in element.attributes and element.attributes['class'] and include_dynamic_attributes:
+=======
+			css_selector = self._convert_simple_xpath_to_css_selector(element.xpath)
+
+			# Handle class attributes
+			if 'class' in element.attributes and element.attributes['class']:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				# Define a regex pattern for valid class names in CSS
 				valid_class_name_pattern = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_-]*$')
 
@@ -799,11 +969,19 @@ class BrowserContext:
 
 			# Expanded set of safe attributes that are stable and useful for selection
 			SAFE_ATTRIBUTES = {
+<<<<<<< HEAD
 				# Data attributes (if they're stable in your application)
 				'id',
 				# Standard HTML attributes
 				'name',
 				'type',
+=======
+				# Standard HTML attributes
+				'id',
+				'name',
+				'type',
+				'value',
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				'placeholder',
 				# Accessibility attributes
 				'aria-label',
@@ -819,11 +997,20 @@ class BrowserContext:
 				'alt',
 				'title',
 				'src',
+<<<<<<< HEAD
+=======
+				# Data attributes (if they're stable in your application)
+				'data-testid',
+				'data-id',
+				'data-qa',
+				'data-cy',
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 				# Custom stable attributes (add any application-specific ones)
 				'href',
 				'target',
 			}
 
+<<<<<<< HEAD
 			if include_dynamic_attributes:
 				dynamic_attributes = {
 					'data-id',
@@ -833,6 +1020,8 @@ class BrowserContext:
 				}
 				SAFE_ATTRIBUTES.update(dynamic_attributes)
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			# Handle other attributes
 			for attribute, value in element.attributes.items():
 				if attribute == 'class':
@@ -851,12 +1040,18 @@ class BrowserContext:
 				# Handle different value cases
 				if value == '':
 					css_selector += f'[{safe_attribute}]'
+<<<<<<< HEAD
 				elif any(char in value for char in '"\'<>`\n\r\t'):
 					# Use contains for values with special characters
 					# Regex-substitute *any* whitespace with a single space, then strip.
 					collapsed_value = re.sub(r'\s+', ' ', value).strip()
 					# Escape embedded double-quotes.
 					safe_value = collapsed_value.replace('"', '\\"')
+=======
+				elif any(char in value for char in '"\'<>`'):
+					# Use contains for values with special characters
+					safe_value = value.replace('"', '\\"')
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 					css_selector += f'[{safe_attribute}*="{safe_value}"]'
 				else:
 					css_selector += f'[{safe_attribute}="{value}"]'
@@ -868,7 +1063,11 @@ class BrowserContext:
 			tag_name = element.tag_name or '*'
 			return f"{tag_name}[highlight_index='{element.highlight_index}']"
 
+<<<<<<< HEAD
 	async def get_locate_element(self, element: DOMElementNode) -> Optional[ElementHandle]:
+=======
+	async def get_locate_element(self, element: DOMElementNode) -> ElementHandle | None:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		current_frame = await self.get_current_page()
 
 		# Start with the target element and collect all parents
@@ -878,6 +1077,7 @@ class BrowserContext:
 			parent = current.parent
 			parents.append(parent)
 			current = parent
+<<<<<<< HEAD
 
 		# Reverse the parents list to process from top to bottom
 		parents.reverse()
@@ -898,19 +1098,40 @@ class BrowserContext:
 			if isinstance(current_frame, FrameLocator):
 				element_handle = await current_frame.locator(css_selector).element_handle()
 				return element_handle
+=======
+			if parent.tag_name == 'iframe':
+				break
+
+		# There can be only one iframe parent (by design of the loop above)
+		iframe_parent = [item for item in parents if item.tag_name == 'iframe']
+		if iframe_parent:
+			parent = iframe_parent[0]
+			css_selector = self._enhanced_css_selector_for_element(parent)
+			current_frame = current_frame.frame_locator(css_selector)
+
+		css_selector = self._enhanced_css_selector_for_element(element)
+
+		try:
+			if isinstance(current_frame, FrameLocator):
+				return await current_frame.locator(css_selector).element_handle()
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			else:
 				# Try to scroll into view if hidden
 				element_handle = await current_frame.query_selector(css_selector)
 				if element_handle:
 					await element_handle.scroll_into_view_if_needed()
 					return element_handle
+<<<<<<< HEAD
 				return None
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		except Exception as e:
 			logger.error(f'Failed to locate element: {str(e)}')
 			return None
 
 	async def _input_text_element_node(self, element_node: DOMElementNode, text: str):
 		try:
+<<<<<<< HEAD
 			# Highlight before typing
 			if element_node.highlight_index is not None:
 				await self._update_state(focus_element=element_node.highlight_index)
@@ -930,12 +1151,32 @@ class BrowserContext:
 			raise Exception(f'Failed to input text into element: {repr(element_node)}. Error: {str(e)}')
 
 	async def _click_element_node(self, element_node: DOMElementNode) -> Optional[str]:
+=======
+			page = await self.get_current_page()
+			element = await self.get_locate_element(element_node)
+
+			if element is None:
+				raise Exception(f'Element: {repr(element_node)} not found')
+
+			await element.scroll_into_view_if_needed(timeout=2500)
+			await element.fill('')
+			await element.type(text)
+			await page.wait_for_load_state()
+
+		except Exception as e:
+			raise Exception(
+				f'Failed to input text into element: {repr(element_node)}. Error: {str(e)}'
+			)
+
+	async def _click_element_node(self, element_node: DOMElementNode):
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""
 		Optimized method to click an element using xpath.
 		"""
 		page = await self.get_current_page()
 
 		try:
+<<<<<<< HEAD
 			# Highlight before clicking
 			if element_node.highlight_index is not None:
 				await self._update_state(focus_element=element_node.highlight_index)
@@ -984,6 +1225,25 @@ class BrowserContext:
 
 		except URLNotAllowedError as e:
 			raise e
+=======
+			element = await self.get_locate_element(element_node)
+
+			if element is None:
+				raise Exception(f'Element: {repr(element_node)} not found')
+
+			# await element.scroll_into_view_if_needed()
+
+			try:
+				await element.click(timeout=1500)
+				await page.wait_for_load_state()
+			except Exception:
+				try:
+					await page.evaluate('(el) => el.click()', element)
+					await page.wait_for_load_state()
+				except Exception as e:
+					raise Exception(f'Failed to click element: {str(e)}')
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		except Exception as e:
 			raise Exception(f'Failed to click element: {repr(element_node)}. Error: {str(e)}')
 
@@ -1010,11 +1270,14 @@ class BrowserContext:
 			raise BrowserError(f'No tab found with page_id: {page_id}')
 
 		page = pages[page_id]
+<<<<<<< HEAD
 
 		# Check if the tab's URL is allowed before switching
 		if not self._is_url_allowed(page.url):
 			raise BrowserError(f'Cannot switch to tab with non-allowed URL: {page.url}')
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		session.current_page = page
 
 		await page.bring_to_front()
@@ -1022,9 +1285,12 @@ class BrowserContext:
 
 	async def create_new_tab(self, url: str | None = None) -> None:
 		"""Create a new tab and optionally navigate to a URL"""
+<<<<<<< HEAD
 		if url and not self._is_url_allowed(url):
 			raise BrowserError(f'Cannot create new tab with non-allowed URL: {url}')
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		session = await self.get_session()
 		new_page = await session.context.new_page()
 		session.current_page = new_page
@@ -1046,10 +1312,16 @@ class BrowserContext:
 
 	async def get_element_by_index(self, index: int) -> ElementHandle | None:
 		selector_map = await self.get_selector_map()
+<<<<<<< HEAD
 		element_handle = await self.get_locate_element(selector_map[index])
 		return element_handle
 
 	async def get_dom_element_by_index(self, index: int) -> DOMElementNode:
+=======
+		return await self.get_locate_element(selector_map[index])
+
+	async def get_dom_element_by_index(self, index: int) -> DOMElementNode | None:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		selector_map = await self.get_selector_map()
 		return selector_map[index]
 
@@ -1070,7 +1342,13 @@ class BrowserContext:
 			except Exception as e:
 				logger.warning(f'Failed to save cookies: {str(e)}')
 
+<<<<<<< HEAD
 	async def is_file_uploader(self, element_node: DOMElementNode, max_depth: int = 3, current_depth: int = 0) -> bool:
+=======
+	async def is_file_uploader(
+		self, element_node: DOMElementNode, max_depth: int = 3, current_depth: int = 0
+	) -> bool:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		"""Check if element or its children are file uploaders"""
 		if current_depth > max_depth:
 			return False
@@ -1083,7 +1361,14 @@ class BrowserContext:
 
 		# Check for file input attributes
 		if element_node.tag_name == 'input':
+<<<<<<< HEAD
 			is_uploader = element_node.attributes.get('type') == 'file' or element_node.attributes.get('accept') is not None
+=======
+			is_uploader = (
+				element_node.attributes.get('type') == 'file'
+				or element_node.attributes.get('accept') is not None
+			)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 
 		if is_uploader:
 			return True
@@ -1096,6 +1381,7 @@ class BrowserContext:
 						return True
 
 		return False
+<<<<<<< HEAD
 
 	async def get_scroll_info(self, page: Page) -> tuple[int, int]:
 		"""Get scroll position information for the current page."""
@@ -1137,3 +1423,5 @@ class BrowserContext:
 			screenshot=None,
 			tabs=[],
 		)
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3

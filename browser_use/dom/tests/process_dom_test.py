@@ -17,7 +17,11 @@ async def test_process_dom():
 
 		time.sleep(3)
 
+<<<<<<< HEAD
 		with open('browser_use/dom/buildDomTree.js', 'r') as f:
+=======
+		with open('browser_use/dom/process_dom.js', 'r') as f:
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			js_code = f.read()
 
 		start = time.time()

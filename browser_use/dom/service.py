@@ -4,15 +4,22 @@ from typing import Optional
 
 from playwright.async_api import Page
 
+<<<<<<< HEAD
 from browser_use.dom.history_tree_processor.view import Coordinates
 from browser_use.dom.views import (
 	CoordinateSet,
+=======
+from browser_use.dom.views import (
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 	DOMBaseNode,
 	DOMElementNode,
 	DOMState,
 	DOMTextNode,
 	SelectorMap,
+<<<<<<< HEAD
 	ViewportInfo,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 )
 
 logger = logging.getLogger(__name__)
@@ -24,6 +31,7 @@ class DomService:
 		self.xpath_cache = {}
 
 	# region - Clickable elements
+<<<<<<< HEAD
 	async def get_clickable_elements(
 		self,
 		highlight_elements: bool = True,
@@ -31,10 +39,15 @@ class DomService:
 		viewport_expansion: int = 0,
 	) -> DOMState:
 		element_tree = await self._build_dom_tree(highlight_elements, focus_element, viewport_expansion)
+=======
+	async def get_clickable_elements(self, highlight_elements: bool = True) -> DOMState:
+		element_tree = await self._build_dom_tree(highlight_elements)
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		selector_map = self._create_selector_map(element_tree)
 
 		return DOMState(element_tree=element_tree, selector_map=selector_map)
 
+<<<<<<< HEAD
 	async def _build_dom_tree(
 		self,
 		highlight_elements: bool,
@@ -50,6 +63,14 @@ class DomService:
 		}
 
 		eval_page = await self.page.evaluate(js_code, args)  # This is quite big, so be careful
+=======
+	async def _build_dom_tree(self, highlight_elements: bool) -> DOMElementNode:
+		js_code = resources.read_text('browser_use.dom', 'buildDomTree.js')
+
+		eval_page = await self.page.evaluate(
+			js_code, [highlight_elements]
+		)  # This is quite big, so be careful
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		html_to_dict = self._parse_node(eval_page)
 
 		if html_to_dict is None or not isinstance(html_to_dict, DOMElementNode):
@@ -85,10 +106,15 @@ class DomService:
 				is_visible=node_data['isVisible'],
 				parent=parent,
 			)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 			return text_node
 
 		tag_name = node_data['tagName']
 
+<<<<<<< HEAD
 		# Parse coordinates if they exist
 		viewport_coordinates = None
 		page_coordinates = None
@@ -124,6 +150,8 @@ class DomService:
 				height=node_data['viewport']['height'],
 			)
 
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		element_node = DOMElementNode(
 			tag_name=tag_name,
 			xpath=node_data['xpath'],
@@ -135,9 +163,12 @@ class DomService:
 			highlight_index=node_data.get('highlightIndex'),
 			shadow_root=node_data.get('shadowRoot', False),
 			parent=parent,
+<<<<<<< HEAD
 			viewport_coordinates=viewport_coordinates,
 			page_coordinates=page_coordinates,
 			viewport_info=viewport_info,
+=======
+>>>>>>> 39aa9e72dfecf6c485004f90b2b40190e4b0f1e3
 		)
 
 		children: list[DOMBaseNode] = []
