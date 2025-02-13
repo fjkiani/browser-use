@@ -1,0 +1,63 @@
+personal:
+  name: ''
+  email: ''
+  phone: ''
+  location: ''
+  linkedin: ''
+  portfolio: ''
+  github: ''
+education:
+- degree: ''
+  major: ''
+  school: ''
+  location: ''
+  start_date: ''
+  end_date: ''
+  gpa: ''
+  relevant_coursework: []
+  achievements: []
+experience:
+- title: ''
+  company: ''
+  location: ''
+  start_date: ''
+  end_date: ''
+  description: []
+  technologies: []
+  achievements: []
+skills:
+  technical:
+    programming_languages: []
+    frameworks: []
+    databases: []
+    tools: []
+    cloud_platforms: []
+  soft_skills: []
+  languages: []
+  certifications: []
+application_preferences:
+  desired_role: []
+  preferred_locations: []
+  minimum_salary: ''
+  remote_preference: ''
+  notice_period: ''
+  visa_sponsorship_required: false
+cover_letter_template: '
+
+  Dear {hiring_manager},
+
+
+  I am writing to express my interest in the {position} role at {company}...
+
+
+  {custom_paragraph}
+
+
+  Thank you for considering my application.
+
+
+  Best regards,
+
+  {name}
+
+  '

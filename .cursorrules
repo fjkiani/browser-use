@@ -1,0 +1,252 @@
+# Instructions
+
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again. 
+
+You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
+
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
+
+# Tools
+
+Note all the tools are in python. So in the case you need to do batch processing, you can always consult the python files and write your own script.
+
+## Screenshot Verification
+The screenshot verification workflow allows you to capture screenshots of web pages and verify their appearance using LLMs. The following tools are available:
+
+1. Screenshot Capture:
+```bash
+venv/bin/python tools/screenshot_utils.py URL [--output OUTPUT] [--width WIDTH] [--height HEIGHT]
+```
+
+2. LLM Verification with Images:
+```bash
+venv/bin/python tools/llm_api.py --prompt "Your verification question" --provider {openai|anthropic} --image path/to/screenshot.png
+```
+
+Example workflow:
+```python
+from screenshot_utils import take_screenshot_sync
+from llm_api import query_llm
+
+# Take a screenshot
+screenshot_path = take_screenshot_sync('https://example.com', 'screenshot.png')
+
+# Verify with LLM
+response = query_llm(
+    "What is the background color and title of this webpage?",
+    provider="openai",  # or "anthropic"
+    image_path=screenshot_path
+)
+print(response)
+```
+
+## LLM
+
+You always have an LLM at your side to help you with the task. For simple tasks, you could invoke the LLM by running the following command:
+```
+venv/bin/python ./tools/llm_api.py --prompt "What is the capital of France?" --provider "anthropic"
+```
+
+The LLM API supports multiple providers:
+- OpenAI (default, model: gpt-4o)
+- Azure OpenAI (model: configured via AZURE_OPENAI_MODEL_DEPLOYMENT in .env file, defaults to gpt-4o-ms)
+- DeepSeek (model: deepseek-chat)
+- Anthropic (model: claude-3-sonnet-20240229)
+- Gemini (model: gemini-pro)
+- Local LLM (model: Qwen/Qwen2.5-32B-Instruct-AWQ)
+
+But usually it's a better idea to check the content of the file and use the APIs in the `tools/llm_api.py` file to invoke the LLM if needed.
+
+## Web browser
+
+You could use the `tools/web_scraper.py` file to scrape the web.
+```
+venv/bin/python ./tools/web_scraper.py --max-concurrent 3 URL1 URL2 URL3
+```
+This will output the content of the web pages.
+
+## Search engine
+
+You could use the `tools/search_engine.py` file to search the web.
+```
+venv/bin/python ./tools/search_engine.py "your search keywords"
+```
+This will output the search results in the following format:
+```
+URL: https://example.com
+Title: This is the title of the search result
+Snippet: This is a snippet of the search result
+```
+If needed, you can further use the `web_scraper.py` file to scrape the web page content.
+
+# Lessons
+
+## User Specified Lessons
+- Python venv in ./venv should be used
+- Include debugging info in program output
+- Read files before editing
+- Use git commit -F for multiline commit messages with "[Cursor] " prefix
+
+## Technical Lessons
+- Browser-use requires both browser-use package and playwright installation
+- Uses GPT-4 with vision capabilities (gpt-4o model)
+- Built on asyncio for async operation
+- Supports multiple LLM providers including OpenAI, Azure, DeepSeek, Anthropic, Gemini, and Local LLM
+
+## Form Handling Lessons
+- Always check if we're on the right domain first
+- Use incremental scrolling to find forms
+- Look for common Greenhouse selectors:
+  - form
+  - input[type="text"]
+  - input[type="email"]
+  - input[type="file"]
+  - button[type="submit"]
+  - .application-form
+  - #application_form
+- Ignore banner/ad elements:
+  - Skip elements with class="banner-link"
+  - Skip elements with id containing "cta-button"
+  - Skip elements outside the main form container
+- Use more specific selectors for form fields:
+  - form input[type="text"]
+  - form input[type="email"]
+  - form input[type="file"]
+  - .application-form input
+  - #application_form input
+- Wait for form container to be visible before interacting
+- Verify element is an input/textarea before attempting to fill
+
+## Browser-use Specific Lessons
+- BrowserConfig only accepts these parameters:
+  - chrome_instance_path
+  - disable_security
+  - headless
+- Don't use launch_args in BrowserConfig
+- Keep browser instance alive between operations
+- Only close browser when explicitly requested
+- Don't close browser after each analysis
+- Kill both Chrome and Chromium processes before starting
+
+# Scratchpad
+
+## Current Task
+Create a job application automation agent that:
+1. Reads job links from Excel
+2. Maintains application context (resume, personal info)
+3. Handles document uploads
+4. Tracks application status
+5. Avoids duplicates
+
+## Project Plan
+
+### Phase 1: Data Structure Setup [ ]
+1. [ ] Create Excel template for job listings
+   - Columns: Job Title, Company, URL, Status, Applied Date, Notes
+2. [ ] Create configuration file for personal information
+   - Contact details
+   - Work experience
+   - Education
+   - Skills
+   - Common application fields
+
+### Phase 2: Core Agent Implementation [ ]
+1. [ ] Base agent structure
+```python
+class JobApplicationAgent(Agent):
+    def __init__(self):
+        self.personal_info = self.load_personal_info()
+        self.application_history = self.load_application_history()
+```
+
+2. [ ] Document handling
+   - Resume upload functionality
+   - Cover letter generation and upload
+   - Track uploaded files
+
+3. [ ] Application tracking
+   - Status management
+   - Update Excel with results
+   - Log application attempts
+
+### Phase 3: Application Process [ ]
+1. [ ] Form filling logic
+   - Identify common form fields
+   - Map personal info to form fields
+   - Handle different application formats
+
+2. [ ] Document upload handling
+   - Resume upload
+   - Cover letter generation/upload
+   - Additional document handling
+
+### Phase 4: Status Tracking [ ]
+1. [ ] Excel integration
+   - Read job listings
+   - Update application status
+   - Track success/failure
+
+## Next Steps
+1. [ ] Create base Excel template
+2. [ ] Define personal info schema
+3. [ ] Implement basic agent structure
+
+## Key Files to Create
+1. `job_application_agent.py`
+```python
+from browser_use import Agent, Controller
+from pathlib import Path
+import pandas as pd
+
+class JobApplicationAgent:
+    def __init__(self, 
+                 excel_path: Path,
+                 resume_path: Path,
+                 personal_info_path: Path):
+        # Initialize components
+```
+
+2. `config/personal_info.yaml`
+```yaml
+personal:
+  name: ""
+  email: ""
+  phone: ""
+  location: ""
+education:
+  - degree: ""
+    school: ""
+    year: ""
+experience:
+  - title: ""
+    company: ""
+    duration: ""
+```
+
+3. `jobs_database.xlsx`
+- Headers: Job Title, Company, URL, Status, Applied Date, Notes
+
+## Implementation Notes
+- Use pandas for Excel handling
+- Implement retry logic for failed uploads
+- Add logging for debugging
+- Store application history in Excel
+- Generate unique IDs for each application attempt
+
+## Questions to Address
+- How to handle different application form formats?
+- What to do if application fails?
+- How to generate appropriate cover letters?
+- How to handle captchas or verification?
+- How to store sensitive personal information securely?
+
+Would you like me to start with:
+1. Creating the Excel template and personal info structure?
+2. Implementing the base agent class?
+3. Setting up the document handling system?
+
+Let me know which part you'd like to tackle first, and I'll provide the detailed implementation.

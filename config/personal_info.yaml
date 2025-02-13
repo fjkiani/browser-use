@@ -1,0 +1,37 @@
+# Personal Information Configuration
+personal:
+  name: "Fahad Kiani"
+  email: "fahad@jedilabs.org"
+  phone: "3476842656"
+  location: "New York, NY"
+  linkedin: "https://www.linkedin.com/in/fjkiani"
+  github: "http://www.github.com/fjkiani"
+  portfolio: "http://www.jedilabs.org"
+
+work_authorization:
+  authorized_to_work: true
+  require_sponsorship: false
+  citizenship_status: "US Citizen"
+  visa_status: null
+
+preferences:
+  willing_to_relocate: true
+  preferred_work_location: "Remote"
+  salary_expectations: "Competitive"
+  start_date: "Immediate"
+  work_schedule: "Full-time"
+
+additional_info:
+  gender: "Prefer not to say"
+  ethnicity: "Prefer not to say"
+  veteran_status: "Not a veteran"
+  disability_status: "Prefer not to say"
+
+application_preferences:
+  desired_role: []
+  preferred_locations: []
+  minimum_salary: ""
+  remote_preference: ""  # "Remote", "Hybrid", "On-site"
+  notice_period: ""
+  visa_sponsorship_required: false
+  
